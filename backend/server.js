@@ -1,17 +1,22 @@
-const express = require("express");
-const cors = require("cors");
+require('dotenv').config();
+
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("BayolLabs Backend Running 🚀");
-});
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('MongoDB Connected'));
 
-const PORT = process.env.PORT || 3000;
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/generate', require('./routes/generate'));
+app.use('/api/payments', require('./routes/payments'));
+app.use('/api/user', require('./routes/user'));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log('Server Running');
 });
